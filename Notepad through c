@@ -1,2 +1,94 @@
-NAME      K.V.S.Jaswanth
-PROJECT   Notepad 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAX_TASKS 100
+
+struct Task {
+    char name[50];
+    int completed;
+};
+
+void display_menu() {
+    printf("1. Add task\n");
+    printf("2. Mark task as complete\n");
+    printf("3. Delete task\n");
+    printf("4. View tasks\n");
+    printf("5. Exit\n");
+}
+
+int add_task(struct Task tasks[], int num_tasks) {
+    char name[50];
+    printf("Enter task name: ");
+    scanf("%s", name);
+    struct Task task;
+    strcpy(task.name, name);
+    task.completed = 0;
+    tasks[num_tasks] = task;
+    return num_tasks + 1;
+}
+
+int mark_task_complete(struct Task tasks[], int num_tasks) {
+    int index;
+    printf("Enter task number: ");
+    scanf("%d", &index);
+    if (index < 1 || index > num_tasks) {
+        printf("Invalid task number\n");
+        return num_tasks;
+    }
+    tasks[index-1].completed = 1;
+    return num_tasks;
+}
+
+int delete_task(struct Task tasks[], int num_tasks) {
+    int index;
+    printf("Enter task number: ");
+    scanf("%d", &index);
+    if (index < 1 || index > num_tasks) {
+        printf("Invalid task number\n");
+        return num_tasks;
+    }
+    for (int i = index-1; i < num_tasks-1; i++) {
+        tasks[i] = tasks[i+1];
+    }
+    return num_tasks - 1;
+}
+
+void view_tasks(struct Task tasks[], int num_tasks) {
+    printf("Task List:\n");
+    for (int i = 0; i < num_tasks; i++) {
+        printf("%d. [%c] %s\n", i+1, tasks[i].completed ? 'X' : ' ', tasks[i].name);
+    }
+}
+
+int main() {
+    struct Task tasks[MAX_TASKS];
+    int num_tasks = 0;
+    int choice;
+    do {
+        display_menu();
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                num_tasks = add_task(tasks, num_tasks);
+                break;
+            case 2:
+                num_tasks = mark_task_complete(tasks, num_tasks);
+                break;
+            case 3:
+                num_tasks = delete_task(tasks, num_tasks);
+                break;
+            case 4:
+                view_tasks(tasks, num_tasks);
+                break;
+            case 5:
+                printf("Goodbye!\n");
+                break;
+            default:
+                printf("Invalid choice\n");
+                break;
+        }
+    } while (choice != 5);
+    return 0;
+}
